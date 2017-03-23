@@ -6,7 +6,7 @@ setup_trac() {
     [ ! -d /trac ] && mkdir /trac
     if [ ! -f /trac/VERSION ]
     then
-        trac-admin /trac initenv "My New Project" sqlite:db/trac.db git /repo.git
+        trac-admin /trac initenv "${TRAC_MAIN_PROJECT_DESCRIPTION}" sqlite:db/trac.db git /repos/repo.git
         setup_components
         setup_accountmanager
         setup_admin_user
@@ -16,18 +16,18 @@ setup_trac() {
 }
 
 setup_repo() {
-    if [ ! -d /repo.git ]
-    then 
+    if [ ! -d /repos/repo.git ]
+    then
         git config --global user.name "Trac Admin"
-        git config --global user.email trac@localhost
+        git config --global user.email ${TRAC_ADMIN_EMAIL}
 
-        mkdir /repo.git
-        pushd /repo.git
+        mkdir -p /repos/repo.git
+        pushd /repos/repo.git
             git init --bare
         popd
 
         pushd /tmp
-            git clone --no-hardlinks /repo.git repo
+            git clone --no-hardlinks /repos/repo.git repo
             pushd repo
                 echo repository init >README
                 git add README
